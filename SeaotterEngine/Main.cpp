@@ -1,5 +1,5 @@
 #include "Game/Game.h"
-#include "Common/common.h"
+#include "Common/Common.h"
 
 int WINAPI wWinMain(_In_ HINSTANCE hInstance, // a handle to the current application instance
     _In_opt_ HINSTANCE hPrevInstance, // always Null
@@ -8,5 +8,5 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, // a handle to the current applica
 
     Game game;
 
-    return game.start();
+    return game.Start();
 }

@@ -1,15 +1,18 @@
 #pragma once
 
-#include "SeaotterEngine/WindowClass/WindowClass.h"
+#include "SeaotterEngine/Window/Window.h"
 
 class Game {
 public:
 	Game();
 	~Game();
 
-	int start();
+	int Start();
 
 private:
-	WindowClass m_wndClass;
+	void Update();
+
+private:
+	Window m_window;
 	bool m_isAlive;
 };
