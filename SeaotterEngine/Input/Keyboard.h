@@ -28,17 +28,16 @@ public:
 	~Keyboard() = default;
 
 	// check if buffers are empty
-	bool InputBufferEmpty() const { return m_inputBuffer.empty(); }
-	bool CharBufferEmpty() const { return m_charBuffer.empty(); }
-
 	bool IsKeyPressed(unsigned char keyCode) const { return m_keyState[keyCode]; }
+	bool IsInputBufferEmpty() const { return m_inputBuffer.empty(); }
+	bool IsCharBufferEmpty() const { return m_charBuffer.empty(); }
 
 	Input ReadFirstInput();
 	char ReadFirstChar();
 
 	// pop buffers until reach kInputBufferLimit
-	void PopKeyEventBuffer();
-	void PopCharBuffer();
+	inline void PopKeyEventBuffer();
+	inline void PopCharBuffer();
 
 	// empty buffer
 	void ClearKeyState() { m_keyState.reset(); }

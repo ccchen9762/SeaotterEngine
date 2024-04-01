@@ -5,7 +5,7 @@
 class Game {
 public:
 	Game();
-	~Game();
+	~Game() = default;
 
 	int Start();
 

@@ -26,14 +26,14 @@ Window::Window(const wchar_t windowClassName[], const wchar_t windowTitle[], con
 
     // adjust client space
     RECT clientSpace = {};
-    clientSpace.left = 100;
-    clientSpace.right = windowWidth + 100;
-    clientSpace.top = 100;
-    clientSpace.bottom = windowHeight + 100;
+    clientSpace.left = 0;
+    clientSpace.right = windowWidth + 0;
+    clientSpace.top = 0;
+    clientSpace.bottom = windowHeight + 0;
     AdjustWindowRect(&clientSpace, WS_OVERLAPPEDWINDOW, false);
 
     // create window instance
-    m_hWnd = CreateWindowEx(WS_EX_ACCEPTFILES,
+    m_hWnd = CreateWindowEx( 0,
         windowClassName, windowTitle, WS_OVERLAPPEDWINDOW,
         CW_USEDEFAULT, CW_USEDEFAULT, // initial position 
         clientSpace.right - clientSpace.left, clientSpace.bottom - clientSpace.top, // size
@@ -78,65 +78,46 @@ LRESULT Window::MessageHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
         const POINTS mousePos = MAKEPOINTS(lParam);
         if (IsMouseInsideWindow(mousePos.x, mousePos.y)) {
             m_mouse.OnMouseMove(Point2D(mousePos.x, mousePos.y));
-            if (!m_mouse.IsInWindow()) {
-                if (GetForegroundWindow() == hWnd)
-                    SetCapture(hWnd);
+            if (GetForegroundWindow() == hWnd)
+                SetCapture(hWnd);
+            if (!m_mouse.IsInWindow())
                 m_mouse.OnMouseEnter();
-            }
+        }
+        else if (wParam & (MK_LBUTTON | MK_MBUTTON | MK_RBUTTON)) {
+            m_mouse.OnMouseMove(Point2D(mousePos.x, mousePos.y));
         }
         else {
-            if (wParam & (MK_LBUTTON | MK_MBUTTON | MK_RBUTTON)) {
-                m_mouse.OnMouseMove(Point2D(mousePos.x, mousePos.y));
-            }
-            else {
-                ReleaseCapture();
-                m_mouse.OnMouseLeave();
-            }
+            ReleaseCapture();
+            m_mouse.OnMouseLeave();
         }
+
         break;
     }
-    case WM_LBUTTONDOWN: {
-        SetForegroundWindow(hWnd);
-        SetCapture(hWnd);
-        const POINTS mousePos = MAKEPOINTS(lParam);
-        m_mouse.OnLButtonDown(Point2D(mousePos.x, mousePos.y));
-        break;
-    }
-    case WM_MBUTTONDOWN: {
-        SetForegroundWindow(hWnd);
-        SetCapture(hWnd);
-        const POINTS mousePos = MAKEPOINTS(lParam);
-        m_mouse.OnMButtonDown(Point2D(mousePos.x, mousePos.y));
-        break;
-    }
+    case WM_LBUTTONDOWN:
+    case WM_MBUTTONDOWN:
     case WM_RBUTTONDOWN: {
-        SetForegroundWindow(hWnd);
         SetCapture(hWnd);
+
         const POINTS mousePos = MAKEPOINTS(lParam);
-        m_mouse.OnRButtonDown(Point2D(mousePos.x, mousePos.y));
+        if (WM_LBUTTONDOWN == msg)
+            m_mouse.OnButtonUp(Point2D(mousePos.x, mousePos.y), Mouse::Input::Type::LButtonDown);
+        else if (WM_MBUTTONDOWN == msg)
+            m_mouse.OnButtonUp(Point2D(mousePos.x, mousePos.y), Mouse::Input::Type::MButtonDown);
+        else if (WM_RBUTTONDOWN == msg)
+            m_mouse.OnButtonUp(Point2D(mousePos.x, mousePos.y), Mouse::Input::Type::RButtonDown);
         break;
     }
-    case WM_LBUTTONUP: {
-        const POINTS mousePos = MAKEPOINTS(lParam);
-        m_mouse.OnLButtonUp(Point2D(mousePos.x, mousePos.y));
-        if (!IsMouseInsideWindow(mousePos.x, mousePos.y)) {
-            ReleaseCapture();
-            m_mouse.OnMouseLeave();
-        }
-        break;
-    }
-    case WM_MBUTTONUP: {
-        const POINTS mousePos = MAKEPOINTS(lParam);
-        m_mouse.OnMButtonUp(Point2D(mousePos.x, mousePos.y));
-        if (!IsMouseInsideWindow(mousePos.x, mousePos.y)) {
-            ReleaseCapture();
-            m_mouse.OnMouseLeave();
-        }
-        break;
-    }
+    case WM_LBUTTONUP:
+    case WM_MBUTTONUP:
     case WM_RBUTTONUP: {
         const POINTS mousePos = MAKEPOINTS(lParam);
-        m_mouse.OnRButtonUp(Point2D(mousePos.x, mousePos.y));
+        if (WM_LBUTTONUP == msg)
+            m_mouse.OnButtonUp(Point2D(mousePos.x, mousePos.y), Mouse::Input::Type::LButtonUp);
+        else if (WM_MBUTTONUP == msg)
+            m_mouse.OnButtonUp(Point2D(mousePos.x, mousePos.y), Mouse::Input::Type::MButtonUp);
+        else if (WM_RBUTTONUP == msg)
+            m_mouse.OnButtonUp(Point2D(mousePos.x, mousePos.y), Mouse::Input::Type::RButtonUp);
+
         if (!IsMouseInsideWindow(mousePos.x, mousePos.y)) {
             ReleaseCapture();
             m_mouse.OnMouseLeave();
@@ -149,7 +130,7 @@ LRESULT Window::MessageHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
         m_mouse.OnWheelScrolled(Point2D(mousePos.x, mousePos.y), delta);
         break;
     }
-
+        
     /* ========== Keyboard messages ========== */
     case WM_KILLFOCUS: {
         m_keyboard.ClearKeyState();
@@ -169,6 +150,7 @@ LRESULT Window::MessageHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
         m_keyboard.OnCharEntered(static_cast<unsigned char>(wParam));
         break;
     }
+
     /* ========== System messages ========== */
     case WM_CLOSE: {
         PostQuitMessage(0);

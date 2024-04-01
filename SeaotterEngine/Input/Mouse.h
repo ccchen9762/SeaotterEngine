@@ -33,16 +33,19 @@ public:
 	};
 
 public:
-	Mouse() : m_isInWindow(false), m_position({ 0, 0 }), m_wheelDelta(0) {}
+	Mouse();
 	~Mouse() = default;
 
 	bool IsInWindow() const { return m_isInWindow; }
+	bool IsLButtonPressed() { return m_LButtonState; }
+	bool IsMButtonPressed() { return m_MButtonState; }
+	bool IsRButtonPressed() { return m_RButtonState; }
+	bool IsInputBufferEmpty() const { return m_inputBuffer.empty(); }
+
 	Input ReadFirstInput();
-	bool InputBufferEmpty() const { return m_inputBuffer.empty(); }
 
 	// pop buffers until reach kInputBufferLimit
-	void PopInputBuffer();
-	
+	inline void PopInputBuffer();
 	// empty buffer
 	void ClearInputBuffer() { std::queue<Input> q; std::swap(m_inputBuffer, q); }
 
@@ -50,20 +53,17 @@ private:
 	// called by Window instance
 	void OnMouseEnter();
 	void OnMouseLeave();
-	void OnMouseMove(const Point2D& pos);
-	void OnLButtonDown(const Point2D& pos);
-	void OnLButtonUp(const Point2D& pos);
-	void OnRButtonDown(const Point2D& pos);
-	void OnRButtonUp(const Point2D& pos);
-	void OnMButtonDown(const Point2D& pos);
-	void OnMButtonUp(const Point2D& pos);
-	void OnWheelScrolled(const Point2D& pos, int delta);
-	void OnWheelUp(const Point2D& pos);
-	void OnWheelDown(const Point2D& pos);
+	void OnMouseMove(const Point2D& position);
+	void OnButtonDown(const Point2D& position, Input::Type type);
+	void OnButtonUp(const Point2D& position, Input::Type type);
+	void OnWheelScrolled(const Point2D& position, int delta);
 
 private:
 	std::queue<Input> m_inputBuffer;
 	bool m_isInWindow;
+	bool m_LButtonState;
+	bool m_MButtonState;
+	bool m_RButtonState;
 	Point2D m_position;
 	int m_wheelDelta;
 };

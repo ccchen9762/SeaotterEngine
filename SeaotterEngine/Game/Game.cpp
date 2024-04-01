@@ -5,9 +5,6 @@
 Game::Game() : m_window(kWindowClassName, kWindowTitle, kMainWindowWidth, kMainWindowHeight), m_isAlive(true) {
 }
 
-Game::~Game() {
-}
-
 int Game::Start() {
 
     // main message loop
@@ -18,12 +15,12 @@ int Game::Start() {
             DispatchMessage(&msg);
 
             if (m_window.m_keyboard.IsKeyPressed(VK_TAB)) {
-                unsigned int result = MessageBox(nullptr, L"HIHIHI", L"TMEPY", MB_OK);
+                unsigned int result = MessageBox(nullptr, L"OK", L"OK", MB_OK);
                 if (result == IDOK)
                     m_window.CaptureWindow();
             }
 
-            while (!m_window.m_mouse.InputBufferEmpty()) {
+            while (!m_window.m_mouse.IsInputBufferEmpty()) {
                 const Mouse::Input mouseInput = m_window.m_mouse.ReadFirstInput();
 
                 static int test = 0;

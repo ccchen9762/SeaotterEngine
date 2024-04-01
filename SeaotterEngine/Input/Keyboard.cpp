@@ -22,13 +22,13 @@ char Keyboard::ReadFirstChar() {
 	return 0;
 }
 
-void Keyboard::PopKeyEventBuffer() {
+inline void Keyboard::PopKeyEventBuffer() {
 	while (m_inputBuffer.size() > kInputBufferLimit) {
 		m_inputBuffer.pop();
 	}
 }
 
-void Keyboard::PopCharBuffer() {
+inline void Keyboard::PopCharBuffer() {
 	while (m_charBuffer.size() > kInputBufferLimit) {
 		m_charBuffer.pop();
 	}
