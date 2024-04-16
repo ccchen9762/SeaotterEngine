@@ -1,10 +1,11 @@
 #pragma once
 
+#include "SeaotterEngine/Common/pch.h"
 #include <string>
 
-#include "SeaotterEngine/Common/WindowsUtils.h"
 #include "SeaotterEngine/Input/Mouse.h"
 #include "SeaotterEngine/Input/Keyboard.h"
+#include "SeaotterEngine/Renderer/Renderer.h"
 
 class Window {
 public:
@@ -27,6 +28,7 @@ private:
 public:
 	Mouse m_mouse;
 	Keyboard m_keyboard;
+	Renderer m_renderer;
 
 private:
 	HWND m_hWnd;

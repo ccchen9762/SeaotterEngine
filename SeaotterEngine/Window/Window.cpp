@@ -1,6 +1,6 @@
 #include "Window.h"
 
-#include "SeaotterEngine/Common/Math.h"
+#include "SeaotterEngine/Common/math.h"
 
 Window::Window(const wchar_t windowClassName[], const wchar_t windowTitle[], const unsigned int windowWidth, const unsigned int windowHeight) :
     m_hInstance(GetModuleHandle(nullptr)), m_windowClassName(windowClassName), m_windowTitle(windowTitle), 
@@ -27,10 +27,10 @@ Window::Window(const wchar_t windowClassName[], const wchar_t windowTitle[], con
     // adjust client space
     RECT clientSpace = {};
     clientSpace.left = 0;
-    clientSpace.right = windowWidth + 0;
+    clientSpace.right = windowWidth;
     clientSpace.top = 0;
-    clientSpace.bottom = windowHeight + 0;
-    AdjustWindowRect(&clientSpace, WS_OVERLAPPEDWINDOW, false);
+    clientSpace.bottom = windowHeight;
+    AdjustWindowRectEx(&clientSpace, WS_OVERLAPPEDWINDOW, false, 0);
 
     // create window instance
     m_hWnd = CreateWindowEx( 0,
@@ -44,6 +44,8 @@ Window::Window(const wchar_t windowClassName[], const wchar_t windowTitle[], con
     );
 
     ShowWindow(m_hWnd, SW_SHOW);
+
+    m_renderer.Init(m_hWnd);
 }
 
 Window::~Window() {
@@ -152,6 +154,11 @@ LRESULT Window::MessageHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
     }
 
     /* ========== System messages ========== */
+    case WM_SIZE: {
+        m_windowWidth = LOWORD(lParam);
+        m_windowHeight = HIWORD(lParam);
+        break;
+    }
     case WM_CLOSE: {
         PostQuitMessage(0);
         return 0;	// to prevent DefWindowProc destroy this instance, let destructor does it

@@ -5,6 +5,9 @@
 Game::Game() : m_window(kWindowClassName, kWindowTitle, kMainWindowWidth, kMainWindowHeight), m_isAlive(true) {
 }
 
+Game::~Game() {
+}
+
 int Game::Start() {
 
     // main message loop
@@ -65,4 +68,5 @@ int Game::Start() {
 }
 
 void Game::Update() {
+    m_window.m_renderer.Update();
 }

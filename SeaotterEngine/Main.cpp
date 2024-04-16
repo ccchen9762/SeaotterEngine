@@ -1,5 +1,4 @@
 #include "Game/Game.h"
-#include "Common/Common.h"
 
 int WINAPI wWinMain(_In_ HINSTANCE hInstance, // a handle to the current application instance
     _In_opt_ HINSTANCE hPrevInstance, // always Null

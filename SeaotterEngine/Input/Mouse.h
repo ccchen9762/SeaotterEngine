@@ -2,7 +2,7 @@
 
 #include <queue>
 
-#include "SeaotterEngine/Common/Math.h"
+#include "SeaotterEngine/Common/math.h"
 
 class Mouse
 {

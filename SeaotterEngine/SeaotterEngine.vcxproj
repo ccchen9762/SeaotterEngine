@@ -133,22 +133,57 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Entity\Entity.cpp" />
     <ClCompile Include="Game\Game.cpp" />
     <ClCompile Include="Input\Keyboard.cpp" />
     <ClCompile Include="Input\Mouse.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="RenderResource\Buffer\ConstantBuffer.cpp" />
+    <ClCompile Include="RenderResource\Buffer\VertexBuffer.cpp" />
     <ClCompile Include="Renderer\Renderer.cpp" />
+    <ClCompile Include="RenderResource\Buffer\IndexBuffer.cpp" />
+    <ClCompile Include="Renderer\RenderGraph.cpp" />
+    <ClCompile Include="RenderResource\RenderResource.cpp" />
+    <ClCompile Include="RenderResource\Resource\InputLayout.cpp" />
+    <ClCompile Include="RenderResource\Resource\Texture.cpp" />
+    <ClCompile Include="RenderResource\Shader\PixelShader.cpp" />
+    <ClCompile Include="RenderResource\Shader\VertexShader.cpp" />
     <ClCompile Include="Window\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Common\Common.h" />
-    <ClInclude Include="Common\Math.h" />
-    <ClInclude Include="Common\WindowsUtils.h" />
+    <ClInclude Include="Common\common.h" />
+    <ClInclude Include="Common\math.h" />
+    <ClInclude Include="Common\pch.h" />
+    <ClInclude Include="Common\readFile.h" />
+    <ClInclude Include="Entity\Entity.h" />
     <ClInclude Include="Game\Game.h" />
     <ClInclude Include="Input\Keyboard.h" />
     <ClInclude Include="Input\Mouse.h" />
+    <ClInclude Include="RenderResource\Buffer\ConstantBuffer.h" />
     <ClInclude Include="Renderer\Renderer.h" />
+    <ClInclude Include="RenderResource\Buffer\IndexBuffer.h" />
+    <ClInclude Include="Renderer\RenderGraph.h" />
+    <ClInclude Include="RenderResource\RenderResource.h" />
+    <ClInclude Include="RenderResource\Resource\InputLayout.h" />
+    <ClInclude Include="RenderResource\Resource\Texture.h" />
+    <ClInclude Include="RenderResource\Shader\PixelShader.h" />
+    <ClInclude Include="RenderResource\Buffer\VertexBuffer.h" />
+    <ClInclude Include="RenderResource\Shader\VertexShader.h" />
     <ClInclude Include="Window\Window.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Shader\PixelShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Shader\VertexShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

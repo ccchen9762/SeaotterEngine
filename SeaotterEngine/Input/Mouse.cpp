@@ -1,9 +1,9 @@
 #include "Mouse.h"
 
+#include "SeaotterEngine/Common/pch.h"
 #include <assert.h>
 
-#include "SeaotterEngine/Common/WindowsUtils.h"
-#include "SeaotterEngine/Common/Common.h"
+#include "SeaotterEngine/Common/common.h"
 
 Mouse::Mouse() : m_isInWindow(false), m_position({ 0, 0 }), m_wheelDelta(0), m_LButtonState(false), m_MButtonState(false), m_RButtonState(false) {
 }
