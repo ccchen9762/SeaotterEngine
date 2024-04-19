@@ -1,6 +1,11 @@
 #include "Window.h"
 
+#include "SeaotterEngine/Imgui/Resource/imgui.h"
+#include "SeaotterEngine/Imgui/Resource/imgui_impl_win32.h"
+
 #include "SeaotterEngine/Common/math.h"
+
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 Window::Window(const wchar_t windowClassName[], const wchar_t windowTitle[], const unsigned int windowWidth, const unsigned int windowHeight) :
     m_hInstance(GetModuleHandle(nullptr)), m_windowClassName(windowClassName), m_windowTitle(windowTitle), 
@@ -44,8 +49,6 @@ Window::Window(const wchar_t windowClassName[], const wchar_t windowTitle[], con
     );
 
     ShowWindow(m_hWnd, SW_SHOW);
-
-    m_renderer.Init(m_hWnd);
 }
 
 Window::~Window() {
@@ -74,6 +77,11 @@ LRESULT CALLBACK Window::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPar
 }
 
 LRESULT Window::MessageHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+
+    // Imgui message handler
+    if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam))
+        return true;
+
     switch (msg) {
     /* ========== Mouse messages ========== */
     case WM_MOUSEMOVE: {

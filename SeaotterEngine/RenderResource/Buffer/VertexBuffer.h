@@ -5,7 +5,7 @@
 #include <DirectXMath.h>
 #include <vector>
 
-class VertexBuffer : RenderResource {
+class VertexBuffer : public RenderResource {
 public:
 	enum class Topology {
 		Line = 0, Triangle = 1

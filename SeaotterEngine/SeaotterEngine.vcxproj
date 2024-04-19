@@ -112,6 +112,9 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <FxCompile>
+      <ObjectFileOutput>$(ProjectDir)ShaderOutput\%(Filename).cso</ObjectFileOutput>
+    </FxCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -131,10 +134,24 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <FxCompile>
+      <ObjectFileOutput>$(ProjectDir)ShaderOutput\%(Filename).cso</ObjectFileOutput>
+    </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Camera\Camera.cpp" />
+    <ClCompile Include="Entity\Debug\Cube.cpp" />
+    <ClCompile Include="Entity\Debug\Plane.cpp" />
     <ClCompile Include="Entity\Entity.cpp" />
     <ClCompile Include="Game\Game.cpp" />
+    <ClCompile Include="Imgui\ImguiHandler.cpp" />
+    <ClCompile Include="Imgui\Resource\imgui.cpp" />
+    <ClCompile Include="Imgui\Resource\imgui_demo.cpp" />
+    <ClCompile Include="Imgui\Resource\imgui_draw.cpp" />
+    <ClCompile Include="Imgui\Resource\imgui_impl_dx11.cpp" />
+    <ClCompile Include="Imgui\Resource\imgui_impl_win32.cpp" />
+    <ClCompile Include="Imgui\Resource\imgui_tables.cpp" />
+    <ClCompile Include="Imgui\Resource\imgui_widgets.cpp" />
     <ClCompile Include="Input\Keyboard.cpp" />
     <ClCompile Include="Input\Mouse.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -143,7 +160,6 @@
     <ClCompile Include="Renderer\Renderer.cpp" />
     <ClCompile Include="RenderResource\Buffer\IndexBuffer.cpp" />
     <ClCompile Include="Renderer\RenderGraph.cpp" />
-    <ClCompile Include="RenderResource\RenderResource.cpp" />
     <ClCompile Include="RenderResource\Resource\InputLayout.cpp" />
     <ClCompile Include="RenderResource\Resource\Texture.cpp" />
     <ClCompile Include="RenderResource\Shader\PixelShader.cpp" />
@@ -151,12 +167,25 @@
     <ClCompile Include="Window\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Common\common.h" />
+    <ClInclude Include="Camera\Camera.h" />
+    <ClInclude Include="Common\constant.h" />
     <ClInclude Include="Common\math.h" />
     <ClInclude Include="Common\pch.h" />
+    <ClInclude Include="Common\randomizer.h" />
     <ClInclude Include="Common\readFile.h" />
+    <ClInclude Include="Entity\Debug\Cube.h" />
+    <ClInclude Include="Entity\Debug\Plane.h" />
     <ClInclude Include="Entity\Entity.h" />
     <ClInclude Include="Game\Game.h" />
+    <ClInclude Include="Imgui\ImguiHandler.h" />
+    <ClInclude Include="Imgui\Resource\imconfig.h" />
+    <ClInclude Include="Imgui\Resource\imgui.h" />
+    <ClInclude Include="Imgui\Resource\imgui_impl_dx11.h" />
+    <ClInclude Include="Imgui\Resource\imgui_impl_win32.h" />
+    <ClInclude Include="Imgui\Resource\imgui_internal.h" />
+    <ClInclude Include="Imgui\Resource\imstb_rectpack.h" />
+    <ClInclude Include="Imgui\Resource\imstb_textedit.h" />
+    <ClInclude Include="Imgui\Resource\imstb_truetype.h" />
     <ClInclude Include="Input\Keyboard.h" />
     <ClInclude Include="Input\Mouse.h" />
     <ClInclude Include="RenderResource\Buffer\ConstantBuffer.h" />
@@ -164,6 +193,7 @@
     <ClInclude Include="RenderResource\Buffer\IndexBuffer.h" />
     <ClInclude Include="Renderer\RenderGraph.h" />
     <ClInclude Include="RenderResource\RenderResource.h" />
+    <ClInclude Include="RenderResource\RenderResourceManager.h" />
     <ClInclude Include="RenderResource\Resource\InputLayout.h" />
     <ClInclude Include="RenderResource\Resource\Texture.h" />
     <ClInclude Include="RenderResource\Shader\PixelShader.h" />
@@ -172,13 +202,37 @@
     <ClInclude Include="Window\Window.h" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Shader\PixelShader.hlsl">
+    <FxCompile Include="Shader\ColorPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
-    <FxCompile Include="Shader\VertexShader.hlsl">
+    <FxCompile Include="Shader\TexturePhongPS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Shader\TexturePhongVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Shader\ColorVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Shader\TexturePS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Shader\TextureVS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>

@@ -4,7 +4,7 @@
 
 #include <vector>
 
-class IndexBuffer : RenderResource {
+class IndexBuffer : public RenderResource {
 public:
 	IndexBuffer(const Microsoft::WRL::ComPtr<ID3D11Device>& device, const std::vector<unsigned short>& indices);
 	~IndexBuffer() = default;

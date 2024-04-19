@@ -3,14 +3,16 @@
 #include <vector>
 #include <fstream>
 
-inline std::vector<uint8_t> ReadCSO(const char* filename) {
+inline std::vector<uint8_t> ReadCSO(const wchar_t* filename) {
 
-    std::ifstream shaderFile(filename, std::ios::in | std::ios::binary | std::ios::ate);
+    std::wstring path = L"ShaderOutput\\" + std::wstring(filename);
+
+    std::ifstream shaderFile(path, std::ios::in | std::ios::binary | std::ios::ate);
 
     if(!shaderFile)
         throw std::runtime_error("ReadCSO");
 
-    int len = static_cast<int>(shaderFile.tellg()); // get the length of file in bytes
+    const std::streampos len = shaderFile.tellg(); // get the length of file in bytes
 
     std::vector<uint8_t> blob;
     blob.resize(size_t(len));

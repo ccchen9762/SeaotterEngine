@@ -4,7 +4,7 @@
 
 #include <vector>
 
-class InputLayout : RenderResource {
+class InputLayout : public RenderResource {
 public:
 	enum class LayoutType {
 		Colored, Textured, ColoredShading, TexturedShading, NormalMapping

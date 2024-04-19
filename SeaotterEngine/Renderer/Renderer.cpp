@@ -5,10 +5,12 @@
 
 #include <assert.h>
 
-Renderer::Renderer() : m_isInit(false) {
+#include "SeaotterEngine/Common/constant.h"
+
+Renderer::Renderer() : m_isInit(false), m_viewport({}) {
 }
 
-void Renderer::Init(HWND hWnd) {
+void Renderer::Init(HWND hWnd, unsigned int viewportWidth, unsigned int viewportHeight) {
 	// desc stands for descriptor
 	DXGI_SWAP_CHAIN_DESC swapChainDesc = {};
 	swapChainDesc.BufferDesc.Width = 0; // 0 means let it figure out
@@ -47,17 +49,61 @@ void Renderer::Init(HWND hWnd) {
 	if (pBackBuffer)
 		DX::ThrowIfFailed(m_pDevice->CreateRenderTargetView(pBackBuffer.Get(), nullptr, &m_pRenderTargetView));
 
+	// Initialize viewport
+	m_viewport.TopLeftX = 0.0f;
+	m_viewport.TopLeftY = 0.0f;
+	m_viewport.Width = static_cast<FLOAT>(viewportWidth);
+	m_viewport.Height = static_cast<FLOAT>(viewportHeight);
+	m_viewport.MinDepth = 0.0f;
+	m_viewport.MaxDepth = 1.0f;
+	m_pDeviceContext->RSSetViewports(1u, &m_viewport);
+
+	// z-buffer need to be created manually
+	D3D11_DEPTH_STENCIL_DESC depthStencilDesc = {};
+	depthStencilDesc.DepthEnable = true;
+	depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+	depthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS;
+	depthStencilDesc.StencilEnable = false;	// skip all stencil stuff
+
+	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> pDepthStencilState;
+	m_pDevice->CreateDepthStencilState(&depthStencilDesc, &pDepthStencilState);
+
+	m_pDeviceContext->OMSetDepthStencilState(pDepthStencilState.Get(), 1u);
+
+	Microsoft::WRL::ComPtr<ID3D11Texture2D> pDepthStencil;
+	D3D11_TEXTURE2D_DESC depthDesc = {};
+	depthDesc.Width = viewportWidth;		// should match with swap chain
+	depthDesc.Height = viewportHeight;	// should match with swap chain
+	depthDesc.MipLevels = 1u;			// mip mapping 
+	depthDesc.ArraySize = 1u;
+	depthDesc.Format = DXGI_FORMAT_D32_FLOAT;
+	depthDesc.SampleDesc.Count = 1u;	// for anti-aliasing
+	depthDesc.SampleDesc.Quality = 0u;	// for anti-aliasing
+	depthDesc.Usage = D3D11_USAGE_DEFAULT;
+	depthDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	depthDesc.CPUAccessFlags = 0u;
+	depthDesc.MiscFlags = 0u;
+	m_pDevice->CreateTexture2D(&depthDesc, nullptr, &pDepthStencil);
+
+	D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc = {};
+	depthStencilViewDesc.Format = DXGI_FORMAT_D32_FLOAT;
+	depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+	depthStencilViewDesc.Texture2D.MipSlice = 0u;
+	m_pDevice->CreateDepthStencilView(pDepthStencil.Get(), &depthStencilViewDesc, &m_pDepthStencilView);
+
+	// bind DepthStencilView to RenderTargetView only once
+	m_pDeviceContext->OMSetRenderTargets(1u, m_pRenderTargetView.GetAddressOf(), m_pDepthStencilView.Get());
+
 	m_isInit = true;
-}
-
-void Renderer::Update() {
-	assert("Renderer not initialized" && m_isInit);
-
-	ClearBuffer(0.1f, 0.5f, 0.6f);
-	m_pSwapChain->Present(1u, 0u); // swapchain present need to be call at the end of frame
 }
 
 void Renderer::ClearBuffer(float red, float green, float blue) {
 	const float color[4] = { red, green, blue, 1.0f };
 	m_pDeviceContext->ClearRenderTargetView(m_pRenderTargetView.Get(), color);
+	m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0, 0u);
+}
+
+void Renderer::Render() {
+	assert("Renderer not initialized" && m_isInit);
+	m_pSwapChain->Present(kVSync, 0u); // swapchain present need to be call at the end of frame
 }

@@ -1,6 +1,6 @@
 #include "Keyboard.h"
 
-#include "SeaotterEngine/Common/common.h"
+#include "SeaotterEngine/Common/constant.h"
 
 Keyboard::Input Keyboard::ReadFirstInput() {
 	if (m_inputBuffer.size() > 0) {

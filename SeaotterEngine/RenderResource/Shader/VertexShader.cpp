@@ -2,7 +2,7 @@
 
 #include "SeaotterEngine/Common/readFile.h"
 
-VertexShader::VertexShader(const Microsoft::WRL::ComPtr<ID3D11Device>& device, const char* filename) {
+VertexShader::VertexShader(const Microsoft::WRL::ComPtr<ID3D11Device>& device, const wchar_t* filename) {
 
 	m_vertexShaderBlob = ReadCSO(filename);
 

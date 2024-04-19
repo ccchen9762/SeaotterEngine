@@ -5,19 +5,19 @@
 
 class Renderer
 {
-	friend class Window;
+	friend class Game;
 
 public:
 	Renderer();
 	~Renderer() = default; // no need to call release for ComPtr
 
-	void Update();
+	void Render();
 	void ClearBuffer(float red, float green, float blue);
 
 private:
-	void Init(HWND hWnd);
+	void Init(HWND hWnd, unsigned int viewportWidth, unsigned int viewportHeight);
 	const Microsoft::WRL::ComPtr<ID3D11Device>& GetDevice() { return m_pDevice; }
-	const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& GetDeviceConetxt() { return m_pDeviceContext; }
+	const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& GetDeviceContext() { return m_pDeviceContext; }
 
 private:
 	bool m_isInit;
@@ -25,4 +25,6 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> m_pDeviceContext;
 	Microsoft::WRL::ComPtr<IDXGISwapChain> m_pSwapChain;
 	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_pRenderTargetView;
+	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> m_pDepthStencilView;
+	D3D11_VIEWPORT m_viewport;
 };

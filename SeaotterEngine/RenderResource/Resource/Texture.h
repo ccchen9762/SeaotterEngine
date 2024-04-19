@@ -4,7 +4,7 @@
 
 #include <vector>
 
-class Texture : RenderResource {
+class Texture : public RenderResource {
 public:
 	enum class Type {
 		Diffuse = 0, Specular = 1, Normal = 2, RenderTarget = 3

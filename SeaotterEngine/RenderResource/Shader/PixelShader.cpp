@@ -2,7 +2,7 @@
 
 #include "SeaotterEngine/Common/readFile.h"
 
-PixelShader::PixelShader(const Microsoft::WRL::ComPtr<ID3D11Device>& device, const char* filename) {
+PixelShader::PixelShader(const Microsoft::WRL::ComPtr<ID3D11Device>& device, const wchar_t* filename) {
 
     m_pixelShaderBlob = ReadCSO(filename);
 

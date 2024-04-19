@@ -14,6 +14,7 @@ public:
 
 	void CaptureWindow() { SetCapture(m_hWnd); }
 	void SetWindowTitle(const std::wstring& title) { SetWindowText(m_hWnd, title.c_str()); }
+	const HWND& GetHWnd() const { return m_hWnd; }
 
 private:
 	static LRESULT CALLBACK PreWndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -28,8 +29,7 @@ private:
 public:
 	Mouse m_mouse;
 	Keyboard m_keyboard;
-	Renderer m_renderer;
-
+	
 private:
 	HWND m_hWnd;
 	HINSTANCE m_hInstance;

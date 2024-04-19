@@ -4,9 +4,9 @@
 
 #include "SeaotterEngine/RenderResource/RenderResource.h"
 
-class PixelShader : RenderResource {
+class PixelShader : public RenderResource {
 public:
-	PixelShader(const Microsoft::WRL::ComPtr<ID3D11Device>& device, const char* filename);
+	PixelShader(const Microsoft::WRL::ComPtr<ID3D11Device>& device, const wchar_t* filename);
 	~PixelShader() = default;
 
 	void Bind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& deviceContext) const override;
