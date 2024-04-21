@@ -4,19 +4,31 @@
 
 #include "SeaotterEngine/Common/constant.h"
 
-int Camera::s_numCamera = 0;
-
 Camera::Camera(const Microsoft::WRL::ComPtr<ID3D11Device>& device,
 	const DirectX::XMVECTOR& position, const DirectX::XMVECTOR& orientation, const DirectX::XMVECTOR& up) :
 	m_position(position), m_orientation(orientation), m_up(up),
-	m_speed(0.02f), m_angularSpeed(0.1f),
+	m_viewMatrix(DirectX::XMMatrixLookToRH(m_position, m_orientation, m_up)),
+	m_projectionMatrix(DirectX::XMMatrixPerspectiveFovRH(DirectX::XM_PIDIV4, kRenderRatio, kNearZ, kFarZ)),
+	m_viewProjectionMatrix(m_viewMatrix * m_projectionMatrix),
 	m_pCameraBuffer(std::make_unique<CameraBuffer>(position)),
-	m_constantBuffer(device, m_pCameraBuffer.get(), sizeof(CameraBuffer), ConstantBuffer::Type::Camera) {
+	m_constantBuffer(device, m_pCameraBuffer.get(), sizeof(CameraBuffer), ConstantBuffer::Type::Camera),
+	m_speed(0.02f), m_angularSpeed(0.1f) {
+}
 
-	++s_numCamera;
+Camera::Camera(const Camera& copy) {
+	m_position = copy.m_position;
+	m_orientation = copy.m_orientation;
+	m_up = copy.m_up;
 
-	SetProjectionMatrix(DirectX::XM_PIDIV4, kRenderRatio, kNearZ, kFarZ);
-	SetViewMatrix();
+	m_viewMatrix = copy.m_viewMatrix;
+	m_projectionMatrix = copy.m_projectionMatrix;
+	m_viewProjectionMatrix = copy.m_viewProjectionMatrix;
+
+	m_pCameraBuffer = std::move(copy.m_pCameraBuffer);	// use pointer to fit in ConstantBuffer
+	m_constantBuffer = copy.m_constantBuffer;
+
+	m_speed = copy.m_speed;
+	m_angularSpeed = copy.m_angularSpeed;
 }
 
 void Camera::Update(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& deviceContext) {
@@ -58,4 +70,5 @@ void Camera::SetViewMatrix() {
 void Camera::SetProjectionMatrix(float fov, float ratio, float nearZ, float farZ) {
 	assert("near & far must be greater than 0" && nearZ > 0 && farZ > 0);
 	m_projectionMatrix = DirectX::XMMatrixPerspectiveFovRH(fov, ratio, nearZ, farZ);
+	m_viewProjectionMatrix = m_viewMatrix * m_projectionMatrix;
 }

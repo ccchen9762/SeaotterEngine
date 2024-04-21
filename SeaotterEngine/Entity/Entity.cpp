@@ -1,7 +1,10 @@
 #include "Entity.h"
 
-Entity::Entity(DirectX::XMFLOAT3 rotation, DirectX::XMFLOAT3 translation, DirectX::XMFLOAT3 revolution, DirectX::XMFLOAT3 scale,
-	size_t indicesSize) :
+#include "SeaotterEngine/Game/Game.h"
+
+Entity::Entity(const Game& parentGame, DirectX::XMFLOAT3 rotation, DirectX::XMFLOAT3 translation, DirectX::XMFLOAT3 revolution, 
+	DirectX::XMFLOAT3 scale, size_t indicesSize) :
+	m_parentGame(parentGame),
 	m_rotation(rotation),
 	m_translation(translation),
 	m_revolution(revolution),
@@ -36,4 +39,8 @@ DirectX::XMMATRIX Entity::GetTransformMatrix() const {
 		DirectX::XMMatrixRotationZ(m_rotation.z) *
 		DirectX::XMMatrixTranslation(m_translation.x, m_translation.y, m_translation.z) *
 		DirectX::XMMatrixScaling(m_scale.x, m_scale.y, m_scale.z);
+}
+
+const DirectX::XMMATRIX& Entity::GetViewProjectionMatrix() const {
+	return m_parentGame.GetViewProjectionMatrix();
 }

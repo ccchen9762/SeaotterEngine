@@ -18,16 +18,15 @@ Game::Game() : m_window(kWindowClassName, kWindowTitle, kMainWindowWidth, kMainW
 
     Randomizer::Init();
 
-    m_renderList.push_back(std::make_unique<Cube>(
-        m_renderer.GetDevice(),
-        DirectX::XMFLOAT3(Randomizer::GetFloat(kPI), Randomizer::GetFloat(kPI), 0.0f),
-        DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f),
-        DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
-        DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f)
-    ));
+    Camera camera(m_renderer.GetDevice(),
+        DirectX::XMVectorSet(20.0f, 15.0f, 0.0f, 1.0f), DirectX::XMVectorSet(-1.0f, 0.0f, 0.0f, 0.0f), DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f));
+
+    m_cameraList.emplace_back(std::move(camera));
+    m_mainCamera = 0;
 
     for (int i = 0; i < 10; i++) {
         m_renderList.push_back(std::make_unique<Cube>(
+            *this,
             m_renderer.GetDevice(),
             DirectX::XMFLOAT3(Randomizer::GetFloat(kPI), Randomizer::GetFloat(kPI), 0.0f),
             DirectX::XMFLOAT3(Randomizer::GetFloat(5.0f, -5.0f), Randomizer::GetFloat(5.0f, -5.0f), -20.0f),
@@ -40,14 +39,14 @@ Game::Game() : m_window(kWindowClassName, kWindowTitle, kMainWindowWidth, kMainW
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
             m_renderList.push_back(std::make_unique<Plane>(
+                *this,
                 m_renderer.GetDevice(),
                 m_renderer.GetDeviceContext(),
                 DirectX::XMFLOAT3(-14.0f + i * 4, 0.0f, -14.0f + j * 4),
                 DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
                 DirectX::XMFLOAT3(4.0f, 1.0f, 4.0f),
                 DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f),
-                nullptr
-                //L"Assets\\Texture\\wood.jpg"
+                L"Assets\\Texture\\wood.jpg"
             ));
         }
     }
@@ -57,6 +56,7 @@ Game::~Game() {
 }
 
 int Game::Start() {
+
     // main message loop
     MSG msg = {};
     while (m_isAlive) {
@@ -81,7 +81,10 @@ int Game::Start() {
 }
 
 void Game::Update() {
-    m_renderer.ClearBuffer(0.1f, 0.1f, 0.1f);
+
+    m_renderer.ClearBuffer(0.15f, 0.15f, 0.15f);
+
+    m_cameraList[0].Update(m_renderer.GetDeviceContext());
 
     for (int i = 0; i < m_renderList.size(); i++) {
         m_renderList[i]->Update();

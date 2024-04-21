@@ -11,10 +11,8 @@ ConstantBufferXForm::ConstantBufferXForm(const Microsoft::WRL::ComPtr<ID3D11Devi
 	// transpose on CPU side is faster than on GPU side
 
 	const XFormBuffer xFormBuffer = {
-		DirectX::XMMatrixTranspose(
-			m_parentEntity.GetTransformMatrix() *
-			DirectX::XMMatrixPerspectiveFovRH(DirectX::XM_PIDIV4, kRenderRatio, 0.1f, 100.0f)
-		)
+		DirectX::XMMatrixTranspose(m_parentEntity.GetTransformMatrix()),
+		DirectX::XMMatrixTranspose(m_parentEntity.GetTransformMatrix() * m_parentEntity.GetViewProjectionMatrix())
 	};
 
 	D3D11_BUFFER_DESC constantBufferDesc = {};
@@ -38,10 +36,8 @@ void ConstantBufferXForm::Bind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>
 
 void ConstantBufferXForm::Update(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& deviceContext) const {
 	const XFormBuffer xFormBuffer = {
-		DirectX::XMMatrixTranspose(
-			m_parentEntity.GetTransformMatrix() *
-			DirectX::XMMatrixPerspectiveFovRH(DirectX::XM_PIDIV4, kRenderRatio, 0.1f, 100.0f)
-		)
+		DirectX::XMMatrixTranspose(m_parentEntity.GetTransformMatrix()),
+		DirectX::XMMatrixTranspose(m_parentEntity.GetTransformMatrix() * m_parentEntity.GetViewProjectionMatrix())
 	};
 
 	D3D11_MAPPED_SUBRESOURCE mappedSubResource;
@@ -52,12 +48,11 @@ void ConstantBufferXForm::Update(const Microsoft::WRL::ComPtr<ID3D11DeviceContex
 
 // ========== ConstantBuffer ==========
 
-ConstantBuffer::ConstantBuffer(const Microsoft::WRL::ComPtr<ID3D11Device>& device, 
-	const void* bufferData, size_t bufferSize, Type type)
+ConstantBuffer::ConstantBuffer(const Microsoft::WRL::ComPtr<ID3D11Device>& device, const void* bufferData, size_t bufferSize, Type type)
 	: m_slot(static_cast<int>(type)) {
 
 	D3D11_BUFFER_DESC constantBufferDesc = {};
-	constantBufferDesc.ByteWidth = bufferSize; // return total array size in bytes
+	constantBufferDesc.ByteWidth = static_cast<UINT>(bufferSize); // return total array size in bytes
 	constantBufferDesc.Usage = D3D11_USAGE_DYNAMIC;	// to be able to update every frame
 	constantBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	constantBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE; // cpu need permission to update buffer
@@ -71,6 +66,9 @@ ConstantBuffer::ConstantBuffer(const Microsoft::WRL::ComPtr<ID3D11Device>& devic
 }
 
 void ConstantBuffer::Bind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& deviceContext) const {
+
+	assert(m_slot != 0 && "use ConstantBufferXForm for transformation");
+
 	// default bind to both shader for now
 	deviceContext->VSSetConstantBuffers(m_slot, 1u, m_pConstantBuffer.GetAddressOf());
 	deviceContext->PSSetConstantBuffers(m_slot, 1u, m_pConstantBuffer.GetAddressOf());

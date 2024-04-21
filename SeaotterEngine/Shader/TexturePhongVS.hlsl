@@ -1,7 +1,11 @@
-cbuffer ConstantBuffer {
+cbuffer transformation : register(b0) {
     matrix model;
     matrix modelViewProjection;
 };
+
+cbuffer camera : register(b1) {
+    float4 cameraPosition;
+}
 
 struct Vertex {
     float4 position : SV_Position;

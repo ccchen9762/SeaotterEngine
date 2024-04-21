@@ -36,8 +36,7 @@ public:
 	};
 
 public:
-	ConstantBuffer(const Microsoft::WRL::ComPtr<ID3D11Device>& device, 
-		const void* bufferData, size_t bufferSize, Type type);
+	ConstantBuffer(const Microsoft::WRL::ComPtr<ID3D11Device>& device, const void* bufferData, size_t bufferSize, Type type);
 	~ConstantBuffer() = default;
 
 	void Bind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& deviceContext) const override;
