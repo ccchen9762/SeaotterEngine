@@ -18,10 +18,8 @@ Game::Game() : m_window(kWindowClassName, kWindowTitle, kMainWindowWidth, kMainW
 
     Randomizer::Init();
 
-    Camera camera(m_renderer.GetDevice(),
-        DirectX::XMVectorSet(20.0f, 15.0f, 0.0f, 1.0f), DirectX::XMVectorSet(-1.0f, 0.0f, 0.0f, 0.0f), DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f));
-
-    m_cameraList.emplace_back(std::move(camera));
+    m_cameraList.emplace_back(m_renderer.GetDevice(),
+        DirectX::XMVectorSet(0.0f, 0.0f, 10.0f, 1.0f), DirectX::XMVectorSet(0.0f, 0.0f, -1.0f, 0.0f), DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f));
     m_mainCamera = 0;
 
     for (int i = 0; i < 10; i++) {
@@ -36,7 +34,7 @@ Game::Game() : m_window(kWindowClassName, kWindowTitle, kMainWindowWidth, kMainW
     }
 
     // floor
-    for (int i = 0; i < 8; i++) {
+    /*for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
             m_renderList.push_back(std::make_unique<Plane>(
                 *this,
@@ -49,13 +47,15 @@ Game::Game() : m_window(kWindowClassName, kWindowTitle, kMainWindowWidth, kMainW
                 L"Assets\\Texture\\wood.jpg"
             ));
         }
-    }
+    }*/
 }
 
 Game::~Game() {
 }
 
 int Game::Start() {
+
+    m_timer.Reset();
 
     // main message loop
     MSG msg = {};
@@ -64,14 +64,14 @@ int Game::Start() {
             TranslateMessage(&msg);
             DispatchMessage(&msg);
 
-            KeyboardHandling();
-            MouseHandling();
-
             if (WM_QUIT == msg.message)
                 m_isAlive = false;
         }
 
-        Update();
+        double deltaTime = m_timer.Update();
+        KeyboardHandling(deltaTime);
+        MouseHandling(deltaTime);
+        Update(deltaTime);
     }
 
     // cleanup and release component object model(COM) resourses
@@ -80,11 +80,11 @@ int Game::Start() {
     return static_cast<int>(msg.wParam);
 }
 
-void Game::Update() {
+void Game::Update(double deltaTime) {
 
     m_renderer.ClearBuffer(0.15f, 0.15f, 0.15f);
 
-    m_cameraList[0].Update(m_renderer.GetDeviceContext());
+    m_cameraList[m_mainCamera].Update(m_renderer.GetDeviceContext());
 
     for (int i = 0; i < m_renderList.size(); i++) {
         m_renderList[i]->Update();
@@ -112,15 +112,42 @@ void Game::Update() {
     m_renderer.Render();
 }
 
-void Game::KeyboardHandling() {
+void Game::KeyboardHandling(double deltaTime) {
+    float speed = 3000.0f;
+
     if (m_window.m_keyboard.IsKeyPressed(VK_TAB)) {
         unsigned int result = MessageBox(nullptr, L"OK", L"OK", MB_OK);
         if (result == IDOK)
             m_window.CaptureWindow();
     }
+    // W
+    if (m_window.m_keyboard.IsKeyPressed(0x57)) {
+        m_cameraList[m_mainCamera].TranslateCameraZ(deltaTime * speed);
+    }
+    // S
+    if (m_window.m_keyboard.IsKeyPressed(0x53)) {
+        m_cameraList[m_mainCamera].TranslateCameraZ(-deltaTime * speed);
+    }
+    // A
+    if (m_window.m_keyboard.IsKeyPressed(0x41)) {
+        m_cameraList[m_mainCamera].TranslateCamera(-deltaTime * speed, 0.0f);
+    }
+    // D
+    if (m_window.m_keyboard.IsKeyPressed(0x44)) {
+        m_cameraList[m_mainCamera].TranslateCamera(deltaTime * speed, 0.0f);
+    }
+    // space
+    if (m_window.m_keyboard.IsKeyPressed(VK_SPACE)) {
+        // minus goes up
+        m_cameraList[m_mainCamera].TranslateCamera(0.0f, -deltaTime * speed);
+    }
+    // L Shift
+    if (m_window.m_keyboard.IsKeyPressed(VK_CONTROL)) {
+        m_cameraList[m_mainCamera].TranslateCamera(0.0f, deltaTime * speed);
+    }
 }
 
-void Game::MouseHandling() {
+void Game::MouseHandling(double deltaTime) {
     while (!m_window.m_mouse.IsInputBufferEmpty()) {
         const Mouse::Input mouseInput = m_window.m_mouse.ReadFirstInput();
 
@@ -146,6 +173,18 @@ void Game::MouseHandling() {
                 Point2D position = mouseInput.GetPosition();
                 const std::wstring title = L"X: " + std::to_wstring(position.x) + L", Y: " + std::to_wstring(position.y);
                 m_window.SetWindowTitle(title);
+
+                static Point2D prevPosition = position;
+                float translateX = position.x - prevPosition.x;
+                float translateY = position.y - prevPosition.y;
+                if (m_window.m_mouse.IsMButtonPressed()) {
+                    m_cameraList[m_mainCamera].TranslateCamera(translateX, translateY);
+                }
+                if (m_window.m_mouse.IsRButtonPressed()) {
+                    m_cameraList[m_mainCamera].RotateCamera(translateX, translateY);
+                }
+                prevPosition = position;
+
                 break;
             }
             }

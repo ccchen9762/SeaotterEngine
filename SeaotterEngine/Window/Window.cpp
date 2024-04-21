@@ -110,11 +110,11 @@ LRESULT Window::MessageHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 
         const POINTS mousePos = MAKEPOINTS(lParam);
         if (WM_LBUTTONDOWN == msg)
-            m_mouse.OnButtonUp(Point2D(mousePos.x, mousePos.y), Mouse::Input::Type::LButtonDown);
+            m_mouse.OnButtonDown(Point2D(mousePos.x, mousePos.y), Mouse::Input::Type::LButtonDown);
         else if (WM_MBUTTONDOWN == msg)
-            m_mouse.OnButtonUp(Point2D(mousePos.x, mousePos.y), Mouse::Input::Type::MButtonDown);
+            m_mouse.OnButtonDown(Point2D(mousePos.x, mousePos.y), Mouse::Input::Type::MButtonDown);
         else if (WM_RBUTTONDOWN == msg)
-            m_mouse.OnButtonUp(Point2D(mousePos.x, mousePos.y), Mouse::Input::Type::RButtonDown);
+            m_mouse.OnButtonDown(Point2D(mousePos.x, mousePos.y), Mouse::Input::Type::RButtonDown);
         break;
     }
     case WM_LBUTTONUP:

@@ -15,22 +15,6 @@ Camera::Camera(const Microsoft::WRL::ComPtr<ID3D11Device>& device,
 	m_speed(0.02f), m_angularSpeed(0.1f) {
 }
 
-Camera::Camera(const Camera& copy) {
-	m_position = copy.m_position;
-	m_orientation = copy.m_orientation;
-	m_up = copy.m_up;
-
-	m_viewMatrix = copy.m_viewMatrix;
-	m_projectionMatrix = copy.m_projectionMatrix;
-	m_viewProjectionMatrix = copy.m_viewProjectionMatrix;
-
-	m_pCameraBuffer = std::move(copy.m_pCameraBuffer);	// use pointer to fit in ConstantBuffer
-	m_constantBuffer = copy.m_constantBuffer;
-
-	m_speed = copy.m_speed;
-	m_angularSpeed = copy.m_angularSpeed;
-}
-
 void Camera::Update(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& deviceContext) {
 	// generate new viewProjectionMatrix
 	SetViewMatrix();

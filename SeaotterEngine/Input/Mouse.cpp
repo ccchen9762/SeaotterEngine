@@ -61,11 +61,11 @@ void Mouse::OnButtonDown(const Point2D& position, Input::Type type) {
 
 void Mouse::OnButtonUp(const Point2D& position, Input::Type type) {
 	if (Input::Type::LButtonUp == type)
-		m_LButtonState = true;
+		m_LButtonState = false;
 	else if (Input::Type::RButtonUp == type)
-		m_RButtonState = true;
+		m_RButtonState = false;
 	else if (Input::Type::MButtonUp == type)
-		m_MButtonState = true;
+		m_MButtonState = false;
 	else
 		assert("Only accept ButtonUp input type");
 

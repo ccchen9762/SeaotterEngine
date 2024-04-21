@@ -1,6 +1,7 @@
 #pragma once
 
 #include "SeaotterEngine/Window/Window.h"
+#include "SeaotterEngine/Common/timer.h"
 #include "SeaotterEngine/Camera/Camera.h"
 #include "SeaotterEngine/Entity/Entity.h"
 #include "SeaotterEngine/Imgui/ImguiHandler.h"
@@ -18,14 +19,15 @@ public:
 	}
 
 private:
-	void Update();
-	void KeyboardHandling();
-	void MouseHandling();
+	void KeyboardHandling(double deltaTime);
+	void MouseHandling(double deltaTime);
+	void Update(double deltaTime);
 
 private:
 	Window m_window;
 	ImguiHandler m_imguiHandler;
 	Renderer m_renderer;
+	Timer m_timer;
 	bool m_isAlive;
 
 	std::vector<Camera> m_cameraList;

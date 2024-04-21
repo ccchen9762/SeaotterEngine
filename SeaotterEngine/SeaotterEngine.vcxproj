@@ -113,7 +113,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <FxCompile>
-      <ObjectFileOutput>$(ProjectDir)ShaderOutput\%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput>$(OutDir)%(Filename).cso</ObjectFileOutput>
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -135,7 +135,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <FxCompile>
-      <ObjectFileOutput>$(ProjectDir)ShaderOutput\%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput>$(OutDir)%(Filename).cso</ObjectFileOutput>
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -173,6 +173,7 @@
     <ClInclude Include="Common\pch.h" />
     <ClInclude Include="Common\randomizer.h" />
     <ClInclude Include="Common\readFile.h" />
+    <ClInclude Include="Common\timer.h" />
     <ClInclude Include="Entity\Debug\Cube.h" />
     <ClInclude Include="Entity\Debug\Plane.h" />
     <ClInclude Include="Entity\Entity.h" />

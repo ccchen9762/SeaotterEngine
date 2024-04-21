@@ -5,9 +5,7 @@
 
 inline std::vector<uint8_t> ReadCSO(const wchar_t* filename) {
 
-    std::wstring path = L"ShaderOutput\\" + std::wstring(filename);
-
-    std::ifstream shaderFile(path, std::ios::in | std::ios::binary | std::ios::ate);
+    std::ifstream shaderFile(filename, std::ios::in | std::ios::binary | std::ios::ate);
 
     if(!shaderFile)
         throw std::runtime_error("ReadCSO");

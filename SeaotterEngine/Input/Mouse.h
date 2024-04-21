@@ -61,9 +61,7 @@ private:
 private:
 	std::queue<Input> m_inputBuffer;
 	bool m_isInWindow;
-	bool m_LButtonState;
-	bool m_MButtonState;
-	bool m_RButtonState;
+	bool m_LButtonState, m_MButtonState, m_RButtonState;
 	Point2D m_position;
 	int m_wheelDelta;
 };

@@ -14,7 +14,7 @@ public:
 		const DirectX::XMVECTOR& position, const DirectX::XMVECTOR& orientation, const DirectX::XMVECTOR& up);
 	~Camera() = default;
 
-	Camera(const Camera& copy);
+	Camera(Camera&& copy) = default; // for camera_list emplace_back
 
 	// called every frame
 	void Update(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& deviceContext);
