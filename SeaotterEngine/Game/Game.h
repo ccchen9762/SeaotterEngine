@@ -14,7 +14,7 @@ public:
 	int Start();
 
 	const DirectX::XMMATRIX& GetViewProjectionMatrix() const {
-		assert(m_cameraList.size() > 0 && "No camera in the list");
+		assert("No camera in the list" && m_cameraList.size() > 0);
 		return m_cameraList[m_mainCamera].GetViewProjectionMatrix(); 
 	}
 
@@ -33,5 +33,6 @@ private:
 	std::vector<Camera> m_cameraList;
 	unsigned int m_mainCamera;
 
+	std::vector<std::unique_ptr<Entity>> m_debugList;
 	std::vector<std::unique_ptr<Entity>> m_renderList;
 };

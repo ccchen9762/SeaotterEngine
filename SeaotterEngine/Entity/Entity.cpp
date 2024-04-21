@@ -2,21 +2,17 @@
 
 #include "SeaotterEngine/Game/Game.h"
 
-Entity::Entity(const Game& parentGame, DirectX::XMFLOAT3 rotation, DirectX::XMFLOAT3 translation, DirectX::XMFLOAT3 revolution, 
+Entity::Entity(const Game& parentGame, DirectX::XMFLOAT3 translation, DirectX::XMFLOAT3 rotation, DirectX::XMFLOAT3 revolution,
 	DirectX::XMFLOAT3 scale, size_t indicesSize) :
 	m_parentGame(parentGame),
-	m_rotation(rotation),
 	m_translation(translation),
+	m_rotation(rotation),
 	m_revolution(revolution),
 	m_scale(scale),
 	m_indicesSize(indicesSize) {
 }
 
-void Entity::Update() {
-	const float speed = 0.0003f;
-	m_rotation.x += speed;
-	m_rotation.y += speed;
-	m_rotation.z += speed;
+void Entity::Update(double deltaTime) {
 }
 
 void Entity::Render(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& pDeviceContext) const {
@@ -34,11 +30,9 @@ void Entity::Render(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& pDeviceCo
 
 DirectX::XMMATRIX Entity::GetTransformMatrix() const {
 
-	return DirectX::XMMatrixRotationX(m_rotation.x) *
-		DirectX::XMMatrixRotationY(m_rotation.y) *
-		DirectX::XMMatrixRotationZ(m_rotation.z) *
-		DirectX::XMMatrixTranslation(m_translation.x, m_translation.y, m_translation.z) *
-		DirectX::XMMatrixScaling(m_scale.x, m_scale.y, m_scale.z);
+	return DirectX::XMMatrixScaling(m_scale.x, m_scale.y, m_scale.z) *
+		DirectX::XMMatrixRotationRollPitchYaw(m_rotation.x, m_rotation.y, m_rotation.z) *
+		DirectX::XMMatrixTranslation(m_translation.x, m_translation.y, m_translation.z);
 }
 
 const DirectX::XMMATRIX& Entity::GetViewProjectionMatrix() const {

@@ -113,7 +113,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <FxCompile>
-      <ObjectFileOutput>$(OutDir)%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput>$(ProjectDir)ShaderOutput\%(Filename).cso</ObjectFileOutput>
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -135,12 +135,13 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <FxCompile>
-      <ObjectFileOutput>$(OutDir)%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput>$(ProjectDir)ShaderOutput\%(Filename).cso</ObjectFileOutput>
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Camera\Camera.cpp" />
     <ClCompile Include="Entity\Debug\Cube.cpp" />
+    <ClCompile Include="Entity\Debug\Line.cpp" />
     <ClCompile Include="Entity\Debug\Plane.cpp" />
     <ClCompile Include="Entity\Entity.cpp" />
     <ClCompile Include="Game\Game.cpp" />
@@ -175,6 +176,7 @@
     <ClInclude Include="Common\readFile.h" />
     <ClInclude Include="Common\timer.h" />
     <ClInclude Include="Entity\Debug\Cube.h" />
+    <ClInclude Include="Entity\Debug\Line.h" />
     <ClInclude Include="Entity\Debug\Plane.h" />
     <ClInclude Include="Entity\Entity.h" />
     <ClInclude Include="Game\Game.h" />

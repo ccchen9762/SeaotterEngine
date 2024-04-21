@@ -9,11 +9,11 @@ class Game;
 
 class Entity {
 public:
-	Entity(const Game& parentGame, DirectX::XMFLOAT3 rotation, DirectX::XMFLOAT3 translation, DirectX::XMFLOAT3 revolution, 
+	Entity(const Game& parentGame, DirectX::XMFLOAT3 translation, DirectX::XMFLOAT3 rotation, DirectX::XMFLOAT3 revolution,
 		DirectX::XMFLOAT3 scale, size_t indicesSize);
 	virtual ~Entity() = default;
 
-	virtual void Update();
+	virtual void Update(double deltaTime);
 	void Render(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& pDeviceContext) const;
 
 	DirectX::XMMATRIX GetTransformMatrix() const;

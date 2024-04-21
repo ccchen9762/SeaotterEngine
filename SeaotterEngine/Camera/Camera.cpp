@@ -52,7 +52,7 @@ void Camera::SetViewMatrix() {
 }
 
 void Camera::SetProjectionMatrix(float fov, float ratio, float nearZ, float farZ) {
-	assert("near & far must be greater than 0" && nearZ > 0 && farZ > 0);
+	assert("nearZ & farZ must be greater than 0" && nearZ > 0 && farZ > 0);
 	m_projectionMatrix = DirectX::XMMatrixPerspectiveFovRH(fov, ratio, nearZ, farZ);
 	m_viewProjectionMatrix = m_viewMatrix * m_projectionMatrix;
 }

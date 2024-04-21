@@ -67,7 +67,7 @@ ConstantBuffer::ConstantBuffer(const Microsoft::WRL::ComPtr<ID3D11Device>& devic
 
 void ConstantBuffer::Bind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& deviceContext) const {
 
-	assert(m_slot != 0 && "use ConstantBufferXForm for transformation");
+	assert("Use ConstantBufferXForm for transformation" && m_slot != 0);
 
 	// default bind to both shader for now
 	deviceContext->VSSetConstantBuffers(m_slot, 1u, m_pConstantBuffer.GetAddressOf());

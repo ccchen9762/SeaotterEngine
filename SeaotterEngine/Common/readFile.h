@@ -2,13 +2,16 @@
 
 #include <vector>
 #include <fstream>
+#include <assert.h>
 
 inline std::vector<uint8_t> ReadCSO(const wchar_t* filename) {
 
-    std::ifstream shaderFile(filename, std::ios::in | std::ios::binary | std::ios::ate);
+    std::wstring path = L"ShaderOutput\\";
+    path += filename;
 
-    if(!shaderFile)
-        throw std::runtime_error("ReadCSO");
+    std::ifstream shaderFile(path, std::ios::in | std::ios::binary | std::ios::ate);
+
+    assert("Error reading cso file" && shaderFile.is_open());
 
     const std::streampos len = shaderFile.tellg(); // get the length of file in bytes
 

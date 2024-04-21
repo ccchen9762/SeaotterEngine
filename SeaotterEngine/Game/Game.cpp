@@ -3,6 +3,7 @@
 #include "SeaotterEngine/Common/constant.h"
 #include "SeaotterEngine/Common/randomizer.h"
 #include "SeaotterEngine/Entity/Debug/Cube.h"
+#include "SeaotterEngine/Entity/Debug/Line.h"
 #include "SeaotterEngine/Entity/Debug/Plane.h"
 
 #include "SeaotterEngine/Imgui/Resource/imgui.h"
@@ -19,22 +20,50 @@ Game::Game() : m_window(kWindowClassName, kWindowTitle, kMainWindowWidth, kMainW
     Randomizer::Init();
 
     m_cameraList.emplace_back(m_renderer.GetDevice(),
-        DirectX::XMVectorSet(0.0f, 0.0f, 10.0f, 1.0f), DirectX::XMVectorSet(0.0f, 0.0f, -1.0f, 0.0f), DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f));
+        DirectX::XMVectorSet(0.0f, 5.0f, 10.0f, 1.0f), DirectX::XMVectorSet(0.0f, 0.0f, -1.0f, 0.0f), DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f));
     m_mainCamera = 0;
+
+    m_debugList.push_back(std::make_unique<Line>(
+        *this,
+        m_renderer.GetDevice(),
+        DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
+        DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
+        DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
+        DirectX::XMFLOAT3(2.0f, 2.0f, 2.0f),
+        DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f)
+    ));
+    m_debugList.push_back(std::make_unique<Line>(
+        *this,
+        m_renderer.GetDevice(),
+        DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
+        DirectX::XMFLOAT3(0.0f, 0.0f, static_cast<float>(kPI / 2)),
+        DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
+        DirectX::XMFLOAT3(2.0f, 2.0f, 2.0f),
+        DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f)
+    ));
+    m_debugList.push_back(std::make_unique<Line>(
+        *this,
+        m_renderer.GetDevice(),
+        DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
+        DirectX::XMFLOAT3(0.0f, static_cast<float>(-kPI / 2), 0.0f),
+        DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
+        DirectX::XMFLOAT3(2.0f, 2.0f, 2.0f),
+        DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f)
+    ));
 
     for (int i = 0; i < 10; i++) {
         m_renderList.push_back(std::make_unique<Cube>(
             *this,
             m_renderer.GetDevice(),
+            DirectX::XMFLOAT3(Randomizer::GetFloat(5.0f, -5.0f), Randomizer::GetFloat(10.0f, 0.0f), -20.0f),
             DirectX::XMFLOAT3(Randomizer::GetFloat(kPI), Randomizer::GetFloat(kPI), 0.0f),
-            DirectX::XMFLOAT3(Randomizer::GetFloat(5.0f, -5.0f), Randomizer::GetFloat(5.0f, -5.0f), -20.0f),
             DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
             DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f)
         ));
     }
 
     // floor
-    /*for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
             m_renderList.push_back(std::make_unique<Plane>(
                 *this,
@@ -42,12 +71,12 @@ Game::Game() : m_window(kWindowClassName, kWindowTitle, kMainWindowWidth, kMainW
                 m_renderer.GetDeviceContext(),
                 DirectX::XMFLOAT3(-14.0f + i * 4, 0.0f, -14.0f + j * 4),
                 DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
+                DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
                 DirectX::XMFLOAT3(4.0f, 1.0f, 4.0f),
-                DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f),
                 L"Assets\\Texture\\wood.jpg"
             ));
         }
-    }*/
+    }
 }
 
 Game::~Game() {
@@ -86,8 +115,13 @@ void Game::Update(double deltaTime) {
 
     m_cameraList[m_mainCamera].Update(m_renderer.GetDeviceContext());
 
+    for (int i = 0; i < m_debugList.size(); i++) {
+        m_debugList[i]->Update(deltaTime);
+        m_debugList[i]->Render(m_renderer.GetDeviceContext());
+    }
+
     for (int i = 0; i < m_renderList.size(); i++) {
-        m_renderList[i]->Update();
+        m_renderList[i]->Update(deltaTime);
         m_renderList[i]->Render(m_renderer.GetDeviceContext());
     }
 

@@ -3,8 +3,8 @@
 #include <directxtk/WICTextureLoader.h>
 
 Texture::Texture(const Microsoft::WRL::ComPtr<ID3D11Device>& device, const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& deviceContext,
-    const wchar_t* path, Texture::Type type)
-    : m_slot(static_cast<unsigned int>(type)) {
+    const wchar_t* path, Texture::Type slot)
+    : m_slot(static_cast<unsigned int>(slot)) {
 
     if (path) {
         DX::ThrowIfFailed(DirectX::CreateWICTextureFromFile(
