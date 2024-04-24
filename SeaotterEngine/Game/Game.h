@@ -2,8 +2,10 @@
 
 #include "SeaotterEngine/Window/Window.h"
 #include "SeaotterEngine/Common/timer.h"
-#include "SeaotterEngine/Camera/Camera.h"
-#include "SeaotterEngine/Entity/Entity.h"
+#include "SeaotterEngine/Scene/Camera/Camera.h"
+#include "SeaotterEngine/Scene/Light/DirectionalLight.h"
+#include "SeaotterEngine/Scene/Light/PointLight.h"
+#include "SeaotterEngine/Scene/Entity/Entity.h"
 #include "SeaotterEngine/Imgui/ImguiHandler.h"
 
 class Game {
@@ -32,6 +34,9 @@ private:
 
 	std::vector<Camera> m_cameraList;
 	unsigned int m_mainCamera;
+
+	DirectionalLight m_directionalLights;
+	PointLight m_pointLights;
 
 	std::vector<std::unique_ptr<Entity>> m_debugList;
 	std::vector<std::unique_ptr<Entity>> m_renderList;

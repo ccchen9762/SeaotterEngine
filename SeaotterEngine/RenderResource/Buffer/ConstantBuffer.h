@@ -15,13 +15,13 @@ public:
 	};
 
 public:
-	ConstantBufferXForm(const Microsoft::WRL::ComPtr<ID3D11Device>& device, const Entity& parentEntity);
+	ConstantBufferXForm(const Microsoft::WRL::ComPtr<ID3D11Device>& pDevice, const Entity& parentEntity);
 	~ConstantBufferXForm() = default;
 
-	void Bind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& deviceContext) const override;
+	void Bind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& pDeviceContext) const override;
 
 private:
-	void Update(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& deviceContext) const;
+	void Update(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& pDeviceContext) const;
 
 private:
 	Microsoft::WRL::ComPtr<ID3D11Buffer> m_pConstantBuffer;
@@ -32,15 +32,15 @@ class ConstantBuffer : public RenderResource
 {
 public:
 	enum class Type {
-		Transformation = 0, Camera = 1, LightDirectional = 2, LightPoint = 3, Attributes = 4
+		Transformation = 0, Camera = 1, DirectionalLight = 2, PointLight = 3, Attributes = 4
 	};
 
 public:
-	ConstantBuffer(const Microsoft::WRL::ComPtr<ID3D11Device>& device, const void* bufferData, size_t bufferSize, Type type);
+	ConstantBuffer(const Microsoft::WRL::ComPtr<ID3D11Device>& pDevice, const void* bufferData, size_t bufferSize, Type type);
 	~ConstantBuffer() = default;
 
-	void Bind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& deviceContext) const override;
-	void Update(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& deviceContext, const void* bufferData, size_t bufferSize) const;
+	void Bind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& pDeviceContext) const override;
+	void Update(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& pDeviceContext, const void* bufferData, size_t bufferSize) const;
 
 private:
 	Microsoft::WRL::ComPtr<ID3D11Buffer> m_pConstantBuffer;

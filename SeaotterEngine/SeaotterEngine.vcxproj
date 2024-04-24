@@ -113,7 +113,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <FxCompile>
-      <ObjectFileOutput>$(ProjectDir)ShaderOutput\%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput>$(ProjectDir)Shader\Output\%(Filename).cso</ObjectFileOutput>
+      <ShaderModel>5.0</ShaderModel>
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -135,15 +136,17 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <FxCompile>
-      <ObjectFileOutput>$(ProjectDir)ShaderOutput\%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput>$(ProjectDir)Shader\Output\%(Filename).cso</ObjectFileOutput>
+      <ShaderModel>5.0</ShaderModel>
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Camera\Camera.cpp" />
-    <ClCompile Include="Entity\Debug\Cube.cpp" />
-    <ClCompile Include="Entity\Debug\Line.cpp" />
-    <ClCompile Include="Entity\Debug\Plane.cpp" />
-    <ClCompile Include="Entity\Entity.cpp" />
+    <ClCompile Include="Scene\Camera\Camera.cpp" />
+    <ClCompile Include="Scene\Entity\Debug\Cube.cpp" />
+    <ClCompile Include="Scene\Entity\Debug\Line.cpp" />
+    <ClCompile Include="Scene\Entity\Debug\Plane.cpp" />
+    <ClCompile Include="Scene\Entity\Debug\Sphere.cpp" />
+    <ClCompile Include="Scene\Entity\Entity.cpp" />
     <ClCompile Include="Game\Game.cpp" />
     <ClCompile Include="Imgui\ImguiHandler.cpp" />
     <ClCompile Include="Imgui\Resource\imgui.cpp" />
@@ -155,6 +158,8 @@
     <ClCompile Include="Imgui\Resource\imgui_widgets.cpp" />
     <ClCompile Include="Input\Keyboard.cpp" />
     <ClCompile Include="Input\Mouse.cpp" />
+    <ClCompile Include="Scene\Light\DirectionalLight.cpp" />
+    <ClCompile Include="Scene\Light\PointLight.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="RenderResource\Buffer\ConstantBuffer.cpp" />
     <ClCompile Include="RenderResource\Buffer\VertexBuffer.cpp" />
@@ -165,20 +170,22 @@
     <ClCompile Include="RenderResource\Resource\Texture.cpp" />
     <ClCompile Include="RenderResource\Shader\PixelShader.cpp" />
     <ClCompile Include="RenderResource\Shader\VertexShader.cpp" />
+    <ClCompile Include="Scene\Scene.cpp" />
     <ClCompile Include="Window\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Camera\Camera.h" />
+    <ClInclude Include="Scene\Camera\Camera.h" />
     <ClInclude Include="Common\constant.h" />
     <ClInclude Include="Common\math.h" />
     <ClInclude Include="Common\pch.h" />
     <ClInclude Include="Common\randomizer.h" />
     <ClInclude Include="Common\readFile.h" />
     <ClInclude Include="Common\timer.h" />
-    <ClInclude Include="Entity\Debug\Cube.h" />
-    <ClInclude Include="Entity\Debug\Line.h" />
-    <ClInclude Include="Entity\Debug\Plane.h" />
-    <ClInclude Include="Entity\Entity.h" />
+    <ClInclude Include="Scene\Entity\Debug\Cube.h" />
+    <ClInclude Include="Scene\Entity\Debug\Line.h" />
+    <ClInclude Include="Scene\Entity\Debug\Plane.h" />
+    <ClInclude Include="Scene\Entity\Debug\Sphere.h" />
+    <ClInclude Include="Scene\Entity\Entity.h" />
     <ClInclude Include="Game\Game.h" />
     <ClInclude Include="Imgui\ImguiHandler.h" />
     <ClInclude Include="Imgui\Resource\imconfig.h" />
@@ -191,6 +198,8 @@
     <ClInclude Include="Imgui\Resource\imstb_truetype.h" />
     <ClInclude Include="Input\Keyboard.h" />
     <ClInclude Include="Input\Mouse.h" />
+    <ClInclude Include="Scene\Light\DirectionalLight.h" />
+    <ClInclude Include="Scene\Light\PointLight.h" />
     <ClInclude Include="RenderResource\Buffer\ConstantBuffer.h" />
     <ClInclude Include="Renderer\Renderer.h" />
     <ClInclude Include="RenderResource\Buffer\IndexBuffer.h" />
@@ -202,6 +211,7 @@
     <ClInclude Include="RenderResource\Shader\PixelShader.h" />
     <ClInclude Include="RenderResource\Buffer\VertexBuffer.h" />
     <ClInclude Include="RenderResource\Shader\VertexShader.h" />
+    <ClInclude Include="Scene\Scene.h" />
     <ClInclude Include="Window\Window.h" />
   </ItemGroup>
   <ItemGroup>
@@ -210,6 +220,18 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Shader\PhongPS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Shader\PhongVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
     <FxCompile Include="Shader\TexturePhongPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
@@ -241,6 +263,9 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shader\Common\light.hlsli" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

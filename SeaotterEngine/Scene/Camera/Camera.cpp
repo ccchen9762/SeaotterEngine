@@ -10,8 +10,8 @@ Camera::Camera(const Microsoft::WRL::ComPtr<ID3D11Device>& device,
 	m_viewMatrix(DirectX::XMMatrixLookToRH(m_position, m_orientation, m_up)),
 	m_projectionMatrix(DirectX::XMMatrixPerspectiveFovRH(DirectX::XM_PIDIV4, kRenderRatio, kNearZ, kFarZ)),
 	m_viewProjectionMatrix(m_viewMatrix * m_projectionMatrix),
-	m_pCameraBuffer(std::make_unique<CameraBuffer>(position)),
-	m_constantBuffer(device, m_pCameraBuffer.get(), sizeof(CameraBuffer), ConstantBuffer::Type::Camera),
+	m_pCameraBuffer({ position }),
+	m_constantBuffer(device, &m_pCameraBuffer, sizeof(CameraBuffer), ConstantBuffer::Type::Camera),
 	m_speed(0.02f), m_angularSpeed(0.1f) {
 }
 
@@ -20,8 +20,8 @@ void Camera::Update(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& deviceCon
 	SetViewMatrix();
 
 	// update constant buffers
-	m_pCameraBuffer->position = m_position;
-	m_constantBuffer.Update(deviceContext, m_pCameraBuffer.get(), sizeof(CameraBuffer));
+	m_pCameraBuffer.position = m_position;
+	m_constantBuffer.Update(deviceContext, &m_pCameraBuffer, sizeof(CameraBuffer));
 
 	m_constantBuffer.Bind(deviceContext);
 }

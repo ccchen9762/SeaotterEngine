@@ -1,9 +1,9 @@
 #pragma once
 
+#include "SeaotterEngine/RenderResource/RenderResource.h"
+
 #include <DirectXMath.h>
 #include <vector>
-
-#include "SeaotterEngine/RenderResource/RenderResource.h"
 
 class Game;
 
@@ -13,11 +13,13 @@ public:
 		DirectX::XMFLOAT3 scale, size_t indicesSize);
 	virtual ~Entity() = default;
 
+	DirectX::XMMATRIX GetTransformMatrix() const;
+	const DirectX::XMMATRIX& GetViewProjectionMatrix() const;
+
 	virtual void Update(double deltaTime);
 	void Render(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& pDeviceContext) const;
 
-	DirectX::XMMATRIX GetTransformMatrix() const;
-	const DirectX::XMMATRIX& GetViewProjectionMatrix() const;
+	void Translate(DirectX::XMFLOAT3 translation) { m_translation = translation; }
 
 protected:
 	DirectX::XMFLOAT3 m_rotation;
@@ -26,8 +28,8 @@ protected:
 	DirectX::XMFLOAT3 m_scale;
 	size_t m_indicesSize;
 
-	std::vector<std::unique_ptr<RenderResource>> m_buffers;
 	std::vector<std::unique_ptr<RenderResource>> m_renderResources;
+	std::vector<std::unique_ptr<RenderResource>> m_buffers;
 
 	const Game& m_parentGame;
 };

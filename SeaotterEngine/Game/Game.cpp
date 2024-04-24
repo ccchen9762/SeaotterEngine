@@ -2,9 +2,9 @@
 
 #include "SeaotterEngine/Common/constant.h"
 #include "SeaotterEngine/Common/randomizer.h"
-#include "SeaotterEngine/Entity/Debug/Cube.h"
-#include "SeaotterEngine/Entity/Debug/Line.h"
-#include "SeaotterEngine/Entity/Debug/Plane.h"
+#include "SeaotterEngine/Scene/Entity/Debug/Cube.h"
+#include "SeaotterEngine/Scene/Entity/Debug/Line.h"
+#include "SeaotterEngine/Scene/Entity/Debug/Plane.h"
 
 #include "SeaotterEngine/Imgui/Resource/imgui.h"
 #include "SeaotterEngine/Imgui/Resource/imgui_impl_dx11.h"
@@ -22,6 +22,10 @@ Game::Game() : m_window(kWindowClassName, kWindowTitle, kMainWindowWidth, kMainW
     m_cameraList.emplace_back(m_renderer.GetDevice(),
         DirectX::XMVectorSet(0.0f, 5.0f, 10.0f, 1.0f), DirectX::XMVectorSet(0.0f, 0.0f, -1.0f, 0.0f), DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f));
     m_mainCamera = 0;
+
+    m_directionalLights.AddLight(m_renderer.GetDevice(), DirectX::XMVectorSet(-1.0f, -1.0f, -1.0f, 0.0f), DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
+
+    m_pointLights.AddLight(*this, m_renderer.GetDevice(), DirectX::XMVectorSet(0.0f, 8.0f, 4.0f, 1.0f), DirectX::XMFLOAT4(1.0f, 0.7f, 0.7f, 1.0f));
 
     m_debugList.push_back(std::make_unique<Line>(
         *this,
@@ -96,11 +100,12 @@ int Game::Start() {
             if (WM_QUIT == msg.message)
                 m_isAlive = false;
         }
-
-        double deltaTime = m_timer.Update();
-        KeyboardHandling(deltaTime);
-        MouseHandling(deltaTime);
-        Update(deltaTime);
+        else {
+            double deltaTime = m_timer.Update();
+            KeyboardHandling(deltaTime);
+            MouseHandling(deltaTime);
+            Update(deltaTime);
+        }
     }
 
     // cleanup and release component object model(COM) resourses
@@ -114,6 +119,10 @@ void Game::Update(double deltaTime) {
     m_renderer.ClearBuffer(0.15f, 0.15f, 0.15f);
 
     m_cameraList[m_mainCamera].Update(m_renderer.GetDeviceContext());
+
+    m_directionalLights.Update(m_renderer.GetDeviceContext());
+    m_pointLights.Update(m_renderer.GetDeviceContext(), deltaTime);
+    m_pointLights.Render(m_renderer.GetDeviceContext());
 
     for (int i = 0; i < m_debugList.size(); i++) {
         m_debugList[i]->Update(deltaTime);

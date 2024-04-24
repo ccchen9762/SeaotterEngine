@@ -14,3 +14,5 @@ constexpr float kRenderRatio = static_cast<float>(kMainWindowWidth) / static_cas
 const unsigned int kVSync = 0u;
 
 const float kNearZ = 0.01f, kFarZ = 200.0f;
+
+const unsigned int kMaxLight = 8;

@@ -57,10 +57,10 @@
     <ClCompile Include="RenderResource\Buffer\ConstantBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Entity\Entity.cpp">
+    <ClCompile Include="Scene\Entity\Entity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Entity\Debug\Cube.cpp">
+    <ClCompile Include="Scene\Entity\Debug\Cube.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Imgui\Resource\imgui.cpp">
@@ -87,13 +87,25 @@
     <ClCompile Include="Imgui\ImguiHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Entity\Debug\Plane.cpp">
+    <ClCompile Include="Scene\Entity\Debug\Plane.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Camera\Camera.cpp">
+    <ClCompile Include="Scene\Camera\Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Entity\Debug\Line.cpp">
+    <ClCompile Include="Scene\Entity\Debug\Line.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Light\PointLight.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Light\DirectionalLight.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Entity\Debug\Sphere.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Scene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -149,13 +161,13 @@
     <ClInclude Include="RenderResource\RenderResource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Entity\Entity.h">
+    <ClInclude Include="Scene\Entity\Entity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Common\readFile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Entity\Debug\Cube.h">
+    <ClInclude Include="Scene\Entity\Debug\Cube.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Common\randomizer.h">
@@ -188,19 +200,31 @@
     <ClInclude Include="Imgui\ImguiHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Entity\Debug\Plane.h">
+    <ClInclude Include="Scene\Entity\Debug\Plane.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="RenderResource\RenderResourceManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Camera\Camera.h">
+    <ClInclude Include="Scene\Camera\Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Common\timer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Entity\Debug\Line.h">
+    <ClInclude Include="Scene\Entity\Debug\Line.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Light\PointLight.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Light\DirectionalLight.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Entity\Debug\Sphere.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Scene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -211,5 +235,10 @@
     <FxCompile Include="Shader\TexturePhongPS.hlsl" />
     <FxCompile Include="Shader\TexturePS.hlsl" />
     <FxCompile Include="Shader\TextureVS.hlsl" />
+    <FxCompile Include="Shader\PhongVS.hlsl" />
+    <FxCompile Include="Shader\PhongPS.hlsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shader\Common\light.hlsli" />
   </ItemGroup>
 </Project>

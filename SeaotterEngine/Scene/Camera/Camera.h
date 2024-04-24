@@ -14,7 +14,7 @@ public:
 		const DirectX::XMVECTOR& position, const DirectX::XMVECTOR& orientation, const DirectX::XMVECTOR& up);
 	~Camera() = default;
 
-	Camera(Camera&& copy) = default; // for camera_list emplace_back
+	Camera(Camera&& move) = default; // for in-place construct in vector
 
 	// called every frame
 	void Update(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& deviceContext);
@@ -39,7 +39,7 @@ private:
 	DirectX::XMMATRIX m_projectionMatrix;
 	DirectX::XMMATRIX m_viewProjectionMatrix;
 	
-	std::unique_ptr<CameraBuffer> m_pCameraBuffer;	// use pointer to fit in ConstantBuffer
+	CameraBuffer m_pCameraBuffer;
 	ConstantBuffer m_constantBuffer;
 	
 	float m_speed, m_angularSpeed;
