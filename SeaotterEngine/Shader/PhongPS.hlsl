@@ -6,6 +6,7 @@ cbuffer camera : register(b1) {
 
 cbuffer attributes : register(b4) {
     float shiness;
+    float3 padding[3];
 }
 
 struct Interpolant {
@@ -31,7 +32,9 @@ Pixel main(Interpolant input) {
         const float3 lightUnitVector = normalize(-directionDir[i]);
         output.color.rgb += intensityDir[i] * ( ambientDir[i].rgb * input.color.rgb + 
             DiffuseLight(input.color.rgb, input.normal, lightUnitVector, diffuseDir[i].rgb) +
-            SpecularLight(input.color.rgb, input.worldPosition, cameraPosition, input.normal, lightUnitVector, specularDir[i].rgb, shiness) );
+            SpecularLight(input.color.rgb, input.worldPosition, cameraPosition, input.normal, lightUnitVector, specularDir[i].rgb, 10.0f) );
+        
+            //SpecularLight(input.color.rgb, input.worldPosition, cameraPosition, input.normal, lightUnitVector, specularDir[i].rgb, shiness) );
     }
     
     // point lights
@@ -41,7 +44,7 @@ Pixel main(Interpolant input) {
         const float3 lightUnitVector = lightVector / distance;
         output.color.rgb += intensityPoint[i] * (ambientPoint[i].rgb * input.color.rgb +
             DiffuseLight(input.color.rgb, input.normal, lightUnitVector, diffusePoint[i].rgb) +
-            SpecularLight(input.color.rgb, input.worldPosition, cameraPosition, input.normal, lightUnitVector, specularPoint[i].rgb, shiness));
+            SpecularLight(input.color.rgb, input.worldPosition, cameraPosition, input.normal, lightUnitVector, specularPoint[i].rgb, 10.0f));
     }
     
     output.color = saturate(float4(output.color.rgb, 1.0f));

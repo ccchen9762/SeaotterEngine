@@ -6,6 +6,7 @@ cbuffer camera : register(b1) {
 
 cbuffer attributes : register(b4) {
     float shiness;
+    float3 padding[3];
 }
 
 struct Interpolant {
@@ -37,12 +38,11 @@ Pixel main(Interpolant input) {
     input.normal = normalize(input.normal);
 
     // directional lights
-    output.color.rgb = float3(0.0f, 0.0f, 0.0f);
+    output.color = float4(0.0f, 0.0f, 0.0f, 1.0f);
     for (int i = 0; i < sizeDir; i++) {
-        const float3 lightUnitVector = normalize(-directionDir[i]);
-        output.color.rgb += intensityDir[i] * (ambientDir[i].rgb * inputColor +
-            DiffuseLight(inputColor, input.normal, lightUnitVector, diffuseDir[i].rgb) +
-            SpecularLight(inputColor, input.worldPosition, cameraPosition, input.normal, lightUnitVector, specularDir[i].rgb, shiness));
+        output.color.rgb += intensityDir[i].x * (ambientDir[i].rgb * inputColor +
+            DiffuseLight(inputColor, input.normal, -directionDir[i], diffuseDir[i].rgb) +
+            SpecularLight(inputColor, input.worldPosition, cameraPosition, input.normal, -directionDir[i], specularDir[i].rgb, 10.0f));
     }
     
     // point lights
@@ -50,9 +50,10 @@ Pixel main(Interpolant input) {
         const float3 lightVector = (positionPoint[i] - input.worldPosition).xyz;
         const float distance = length(lightVector);
         const float3 lightUnitVector = lightVector / distance;
-        output.color.rgb += intensityPoint[i] * (ambientPoint[i].rgb * inputColor +
+        output.color.rgb += Attenuation(distance, attenConstantPoint, attenLinearPoint, attenQuadraticPoint) *
+            intensityPoint[i].x * (ambientPoint[i].rgb * inputColor +
             DiffuseLight(inputColor, input.normal, lightUnitVector, diffusePoint[i].rgb) +
-            SpecularLight(inputColor, input.worldPosition, cameraPosition, input.normal, lightUnitVector, specularPoint[i].rgb, shiness));
+            SpecularLight(inputColor, input.worldPosition, cameraPosition, input.normal, lightUnitVector, specularPoint[i].rgb, 10.0f));
     }
     
     output.color = saturate(float4(output.color.rgb, 1.0f));

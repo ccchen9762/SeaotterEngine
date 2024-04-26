@@ -5,11 +5,8 @@ cbuffer LightDirectional : register(b2) {
     float4 ambientDir[MAX_LIGHTS];
     float4 diffuseDir[MAX_LIGHTS];
     float4 specularDir[MAX_LIGHTS];
-    float intensityDir[MAX_LIGHTS];
-    int sizeDir;
-    float attenConstantDir;
-    float attenLinearDir;
-    float attenQuadraticDir;
+    float4 intensityDir[MAX_LIGHTS];
+    unsigned int sizeDir;
 };
 
 cbuffer LightPoint : register(b3) {
@@ -17,8 +14,8 @@ cbuffer LightPoint : register(b3) {
     float4 ambientPoint[MAX_LIGHTS];
     float4 diffusePoint[MAX_LIGHTS];
     float4 specularPoint[MAX_LIGHTS];
-    float intensityPoint[MAX_LIGHTS];
-    int sizePoint;
+    float4 intensityPoint[MAX_LIGHTS];
+    unsigned int sizePoint;
     float attenConstantPoint;
     float attenLinearPoint;
     float attenQuadraticPoint;

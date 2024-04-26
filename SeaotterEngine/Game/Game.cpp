@@ -23,9 +23,15 @@ Game::Game() : m_window(kWindowClassName, kWindowTitle, kMainWindowWidth, kMainW
         DirectX::XMVectorSet(0.0f, 5.0f, 10.0f, 1.0f), DirectX::XMVectorSet(0.0f, 0.0f, -1.0f, 0.0f), DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f));
     m_mainCamera = 0;
 
-    m_directionalLights.AddLight(m_renderer.GetDevice(), DirectX::XMVectorSet(-1.0f, -1.0f, -1.0f, 0.0f), DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
+    m_directionalLights.AddLight(m_renderer.GetDevice(), 
+        DirectX::XMVectorSet(-1.0f, -1.0f, -1.0f, 0.0f), 
+        DirectX::XMFLOAT4(0.1f, 0.1f, 0.1f, 1.0f),
+        DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
 
-    m_pointLights.AddLight(*this, m_renderer.GetDevice(), DirectX::XMVectorSet(0.0f, 8.0f, 4.0f, 1.0f), DirectX::XMFLOAT4(1.0f, 0.7f, 0.7f, 1.0f));
+    m_pointLights.AddLight(*this, m_renderer.GetDevice(), 
+        DirectX::XMVectorSet(0.0f, 8.0f, 4.0f, 1.0f), 
+        DirectX::XMFLOAT4(0.1f, 0.1f, 0.1f, 1.0f),
+        DirectX::XMFLOAT4(1.0f, 0.7f, 0.7f, 1.0f));
 
     m_debugList.push_back(std::make_unique<Line>(
         *this,
